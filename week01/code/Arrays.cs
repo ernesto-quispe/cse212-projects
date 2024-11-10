@@ -1,3 +1,5 @@
+using System.Runtime.ExceptionServices;
+
 public static class Arrays
 {
     /// <summary>
@@ -13,7 +15,20 @@ public static class Arrays
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
 
-        return []; // replace this return statement with your own
+        // 1. Create an empty static array that can be used to store the new multiple variables, the length should be the the 'length' parameter
+        // 2. create a loop that will multiply the orignal number the same amount of times as 'length' by an increasing number, starting at 1. e.g. if length is 3 then it would multiple by 1,2, and then 3.
+        // 3. each time it loops, it will store the new multiplied number at the end of the multiples array.
+
+        // create an array of size length 
+        double[] arrayMultiples = new double[length];
+        // calculate multiples for number and store in the array 
+        for (int i = 0; i < length; i++)
+        {
+            // adding result of multiplication to array 
+            arrayMultiples[i] = number * (i + 1);
+        }
+
+        return arrayMultiples; 
     }
 
     /// <summary>
@@ -29,5 +44,25 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+
+        // 1. Since we will be using the reference to the original list, we need to first create a copy of the original list so it can be modified.
+        // 2. Loop the number of times requested by  'amount', i will be the index, so it will start at 0
+        // 3. each iteration I will add 'amount' to the index (i) and pull the number at index i from the temp list and assign it to the original list at the modified index.
+	    // e.g. if i is 1, amount is 5, the new index would be 6, and so on for each.
+        // 4. I need to implement module probably to make sure that when i is greater than the actual index of the list, it will start back at 0 index of the list.
+
+        // n is the length of the array 
+        int n = data.Count;
+
+        // create copy of orginal array 
+        List<int> tempList = new List<int> (data);
+
+        for (int i = 0; i < n; i++)
+        {
+            // copy the value from the copied array at the original position (index i), add 'amount' to the index, then use module to provide an index within the length of the array and add the value to the new position
+            data[(i + amount) % n] = tempList[i];
+        }
     }
+
+
 }
