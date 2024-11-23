@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Linq;
 
 public static class SetsAndMaps
 {
@@ -22,7 +23,21 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        var finalList = new List<string>();
+        var wordSet  = new HashSet<string>();
+
+        foreach (var word in words)
+        {
+            var reversedWord  = new string(word.Reverse().ToArray());
+
+            if (wordSet.Contains(reversedWord ) && word != reversedWord )
+            {
+                finalList.Add($"{reversedWord } & {word}");
+            }
+            wordSet .Add(word);
+        }
+
+            return finalList.ToArray();
     }
 
     /// <summary>
@@ -43,6 +58,13 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+            var tempDegree = fields[3].Trim();
+
+            if (degrees.ContainsKey(tempDegree)) {
+                degrees[tempDegree] += 1;
+            } else {
+                degrees[tempDegree] = 1;
+            }
         }
 
         return degrees;
@@ -66,8 +88,25 @@ public static class SetsAndMaps
     /// </summary>
     public static bool IsAnagram(string word1, string word2)
     {
-        // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+     // TODO Problem 3 - ADD YOUR CODE HERE
+        // Remove spaces and convert to lowercase
+        word1 = word1.Replace(" ", "").ToLower();
+        word2 = word2.Replace(" ", "").ToLower();
+
+        // If the lengths don't match, they're not anagrams.
+        if (word1.Length != word2.Length)
+        {
+            return false;
+        }
+
+        // Count the frequencies of letters in both words using LINQ
+        var word1Counts = word1.GroupBy(c => c).ToDictionary(g => g.Key, g => g.Count());
+        var word2Counts = word2.GroupBy(c => c).ToDictionary(g => g.Key, g => g.Count());
+
+        // 4. Comparar las frecuencias de las letras
+        var result = word1Counts.OrderBy(kv => kv.Key).SequenceEqual(word2Counts.OrderBy(kv => kv.Key));
+        return result;
+
     }
 
     /// <summary>
@@ -101,6 +140,22 @@ public static class SetsAndMaps
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
-        return [];
+   
+   
+        // list for formatted strings
+        var earthquakeSummaries = new List<string>();
+
+        // Make sure FeatureCollection is valid
+        featureCollection?.Features?.ForEach(feature =>
+        {
+            // Validate the magnitude and location
+            if (feature.Properties.Mag.HasValue && !string.IsNullOrWhiteSpace(feature.Properties.Place))
+            {
+                earthquakeSummaries.Add($"{feature.Properties.Place} - Mag {feature.Properties.Mag:F2}");
+            }
+        });
+
+        // Return the results 
+        return earthquakeSummaries.ToArray();
     }
 }
